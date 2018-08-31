@@ -21,6 +21,9 @@
     <canvas id="miCanvas" width="640" height="480"></canvas>
 
     <script type="application/javascript">
+    var  A  =  function () {
+			consola . log ( ' Texto en consola desde JavaScript ' ); 
+    }
        
         var canvas = document.getElementById("miCanvas");
         
@@ -92,11 +95,39 @@
 
                 contexto.drawImage(spriteSheet, imagenActual.x, imagenActual.y, 25, 16, x, y, 25, 16);
                 //llamamos a la funcion que mueve al personaje 
-                moverPersonaje();
+                moverPersonaje ();
                 //si el personaje supera los 200 pixeles, cambiamos la funcion
                 if (x > 200) {
                     moverPersonaje = moverIzquierda;
                 }
+                 var A = function () {
+                     var b = 'Variable privada';
+                 }
+                    var a = new A() ;
+
+                    var enemigo = function () {
+                        var x = 100,
+                        y = 1;
+                        this.actualizar = function () {
+                            y++;
+                        };
+                        this.dibujar = function (contexto) {
+                            contexto.drawImage(spriteSheet, 5, 200, 14, 15, x, y, 14, 15);
+                        } ;
+                    }
+                        var miEnemigo = new enemigo ();
+
+                        function actualizarJuego () {
+                            var imagenActual = posiciones[indiceAnimacion];
+                            miEnemigo.actualizar();
+                            miEnemigo.dibujar(contexto);
+                            contexto.drawImage(spriteSheet, imagenActual.x,imagenActual.y, 25, 16, x, y, 25, 16);
+                            moverPersonaje();
+                        }
+
+
+
+
             }
 
 
