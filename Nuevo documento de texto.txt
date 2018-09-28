@@ -1,0 +1,52 @@
+<!Doctype html>
+<html>
+    <head >
+        <title > Mi videojuego </title >
+    </head >
+    <cuerpo>
+</body>
+    <script  type = " application / javascript " >
+
+		var  A  =  function () {
+			consola.log ( ' Texto en consola desde JavaScript ' );
+        
+        spriteSheet.src = ' images / 1942-map-tiles.png ' ;
+                 var A = function () {
+                     var b = 'Variable privada';
+                 }
+
+                    var a = new A() ;
+
+                    var enemigo = function () {
+                        var x = 100,
+                        y = 1;
+                        this.actualizar = function () {
+                            y++;
+                        };
+                        this.dibujar = function (contexto) {
+                            contexto.drawImage(spriteSheet, 5, 200, 14, 15, x, y, 14, 15);
+                        } ;
+                    }
+                        var miEnemigo = new enemigo ();
+
+                        function actualizarJuego () {
+                            var imagenActual = posiciones[indiceAnimacion];
+                            miEnemigo.actualizar();
+                            miEnemigo.dibujar(contexto);
+                            contexto.drawImage(spriteSheet, imagenActual.x,imagenActual.y, 25, 16, x, y, 25, 16);
+                            moverPersonaje();
+                        }
+
+
+                    }
+
+
+
+
+    </script>
+</html>
+
+
+
+
+
