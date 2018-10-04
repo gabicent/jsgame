@@ -1,111 +1,128 @@
-<!doctype html>
-<html class="no-js" lang="">
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Ejemplo Nave 2</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <link rel="manifest" href="site.webmanifest">
-    <link rel="apple-touch-icon" href="icon.png">
-
-
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/main.css">
-</head>
-
-<body>
-
-    <canvas id="miCanvas" width="640" height="480"></canvas>
-</body>
-<script type="application/javascript">
-
-    var canvas = document.getElementById("miCanvas");
-    var contexto = canvas.getContext("2d");
-
-    var spriteSheet = new Image();
-    x = 10; y = 10;
-
-    spriteSheet.onload = function () {
-        setInterval(actualizarJuego, 1000 / 33);
-    };
-
-    var posiciones = [
-        { x: 38, y: 6, ancho: 24, alto: 16 },
-        { x: 101, y: 6, ancho: 24, alto: 16 },
-        { x: 166, y: 6, ancho: 24, alto: 16 }
-    ];
-    indiceAnimacion = 0;
-    ultimoCuadro = new Date().getTime();
-    tiempoAcumulado = 0;
-
-    var enemigo = function () {
-        var x = (Math.random() * 400) + 40,
-            y = 1;
-
-        this.actualizar = function () {
-            y++;
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mi videojuego</title>
+    </head>
+	<body>
+		<canvas id="miCanvas" width="640" height="480"></canvas>
+	</body>
+    <script type="application/javascript">
+        var canvas = document.getElementById('miCanvas'),
+            contexto = canvas.getContext('2d');
+		
+        var spriteSheet = new Image(),
+            x = 10, y = 10;
+        spriteSheet.onload = function () {
+            setInterval(actualizarJuego, 1000/33);
         };
-        this.dibujar = function (contexto) {
-            contexto.drawImage(spriteSheet, 5, 200, 14, 15, x, y, 14, 15);
-        };
-    }
-    var enemigos = [];
-    for (var i = 0; i < 10; i++) {
-        enemigos.push(new enemigo());
-    }
-
-    var moverDerecha = function () {
-        x++;
-        if (indiceAnimacion < 2 && tiempoAcumulado > 1) {
-            tiempoAcumulado = 0;
-            indiceAnimacion++;
+		var posiciones = [{ x: 134, y: 6, ancho: 24, alto: 16},
+						  { x: 70, y: 6, ancho: 24, alto: 16},
+						  { x: 38, y: 6, ancho: 24, alto: 16},
+						  { x: 101, y: 6, ancho: 24, alto: 16},
+						  { x: 166, y: 6, ancho: 24, alto: 16}],
+			indiceAnimacion = 0,
+			ultimoCuadro = new Date().getTime(),
+			tiempoAcumulado = 0;
+		document.addEventListener('keydown', teclaPresionada, false);
+		document.addEventListener('keyup', teclaNoPresionada, false);
+		
+		canvas.addEventListener('click', clickMouse, false);
+		function clickMouse(event) {
+            
         }
-    }
-    var moverIzquierda = function () {
-        x--;
-        if (indiceAnimacion < 0 && tiempoAcumulado > 1) {
-            tiempoAcumulado = 0;
-            indiceAnimacion--;
+        var velocidadMovimiento = 20,
+			objetivoX = 0,
+			objetivoY = 0;
+
+
+        function clickMouse (event) {
+            x= event.x;
+            y= event.y;
         }
-    }
-    var moverPersonaje = moverDerecha;
-    function actualizarJuego() {
+        x += (objetivoX - x) / velocidadMovimiento;
+		y += (objetivoY - y) / velocidadMovimiento;
 
-        var esteCuadro = new Date().getTime(),
-            delta = (esteCuadro - ultimoCuadro) / 1000;
-        ultimoCuadro = esteCuadro;
-        tiempoAcumulado += delta;
+		
 
-        contexto.fillStyle = "white";
-        contexto.fillRect(0, 0, 640, 480);
+		var teclasPresionadas = {
+			'37': false,
+			'38': false,
+			'39': false,
+			'40': false
+		};
+		function teclaNoPresionada(event) {
+			var tecla = event.keyCode;
+			teclasPresionadas[tecla] = false;
+		}
+			
+		function teclaPresionada(event) {
+			var tecla = event.keyCode;
+			teclasPresionadas[tecla] = true;
+		}
+			
+		function crearEnemigo() {
+			return {
+				x: (Math.random() * 400) + 40,
+				y: 1,			
+				actualizar: function () {
+					this.y++;
+				},			
+				dibujar: function (contexto) {
+					contexto.drawImage(spriteSheet, 5, 200, 14, 15, this.x, this.y, 14, 15);
+				}
+			};
+		}
+		var enemigos = [];
+		for (var i = 0; i < 10; i++) {
+			enemigos.push(crearEnemigo());
+		}
+					
+		function actualizarJuego() {
+			var esteCuadro = new Date().getTime(),
+				delta = (esteCuadro - ultimoCuadro) / 1000;
+			ultimoCuadro = esteCuadro;
+			tiempoAcumulado += delta;
+			contexto.fillStyle = 'white';
+			contexto.fillRect(0, 0, 640, 480);
 
-        var imagenActual = posiciones[indiceAnimacion];
-
-        for (var i = 0; i < enemigos.length; i++) {
-            enemigos[i].actualizar();
-            enemigos[i].dibujar(contexto);
-        }
-        contexto.drawImage(spriteSheet, imagenActual.x, imagenActual.y, 25, 16, x, y, 25, 16);
-
-        moverPersonaje();
-
-        if (x > 200) {
-            moverPersonaje = moverIzquierda;
-        }
-
-    }
-    spriteSheet.src = "../images/1942-general-sprites.png";
-
-
-</script>
-<style>
-    #miCanvas {
-        border: 1px solid #000;
-    }
-</style>
-</body>
-
+			var imagenActual = posiciones[indiceAnimacion];
+            
+			for (var i = 0; i < enemigos.length; i++) {
+				enemigos[i].actualizar();
+				enemigos[i].dibujar(contexto);
+			}
+			
+			
+			if (teclasPresionadas['37']) {
+				x--;
+				if (indiceAnimacion > 0 && tiempoAcumulado > 1) {
+					tiempoAcumulado = 0;
+					indiceAnimacion--;
+				}
+			}
+			if (teclasPresionadas['39']) {
+				x++;
+				if (indiceAnimacion < 4 && tiempoAcumulado > 1) {
+					tiempoAcumulado = 0;
+					indiceAnimacion++;
+				}
+			}
+			if (teclasPresionadas['40']) {
+				y++;
+			}
+			if (teclasPresionadas['38']) {
+				y--;
+			}
+			if (!teclasPresionadas['37'] && !teclasPresionadas['39']) {
+				if (indiceAnimacion !== 2 && tiempoAcumulado > 1) {
+					tiempoAcumulado = 0;
+					indiceAnimacion -= indiceAnimacion > 2 ? 1 : -1;
+				}
+			}
+			
+			contexto.drawImage(spriteSheet, imagenActual.x, imagenActual.y, 25, 16, x, y, 25, 16);
+		}
+        spriteSheet.src = '../images/1942-general-sprites.png';
+		
+    </script>
 </html>
