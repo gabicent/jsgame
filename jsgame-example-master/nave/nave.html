@@ -73,10 +73,25 @@
 			};
 		}
 		var enemigos = [];
-		for (var i = 0; i < 10; i++) {
+		for (var i = 0; i < 1000; i++) {
 			enemigos.push(crearEnemigo());
 		}
-					
+			spriteSheet.onload = function() {
+				obtenerCuadroAnimacion(actualizarJuego);
+			};
+			window.obtenerCuadroAnimacion = (function () {
+				return window.requestAnimationFrame ||
+					   window.webkitCancelAnimationFrame ||
+					   window.mozRequestAnimationFrame ||
+					   window.oRequestAnimationFrame ||
+					   window.msRequestAnimationFrame ||
+					   function(callback, element) {
+						   window.setTimeout(actualizarJuego, 1000/60);
+			};
+		}) ();
+
+
+
 		function actualizarJuego() {
 			var esteCuadro = new Date().getTime(),
 				delta = (esteCuadro - ultimoCuadro) / 1000;
@@ -119,9 +134,20 @@
 					indiceAnimacion -= indiceAnimacion > 2 ? 1 : -1;
 				}
 			}
-			
-			contexto.drawImage(spriteSheet, imagenActual.x, imagenActual.y, 25, 16, x, y, 25, 16);
+			//Enviamos la referencia a la funcion
+		actualizarMovimientoAvion(actualizarMouse);
+		contexto.drawImage(spriteSheet, imagenActual.x, imagenActual.y, 25, 16, x, y, 25, 16);
 		}
+		function actualizarMouse () {
+
+		}
+		function actualizarteclado (){
+			
+		}
+	function actualizarMovimientoAvion (funcionAEjecutar){
+		funcionAEjecutar();	
+		}
+
         spriteSheet.src = '../images/1942-general-sprites.png';
 		
     </script>
